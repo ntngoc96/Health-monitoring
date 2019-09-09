@@ -18,6 +18,16 @@ io.on("connection", function(socket) {
     console.log("Received something")
     console.log(data)
   })
+
+  socket.on("heart_rate",function(data){
+    console.log("Received heart_rate")
+    console.log(data)
+  })
+
+  socket.on("steps",function(data){
+    console.log("Received steps and ...")
+    console.log(data)
+  })
   
   socket.on("message", function(data) {
     console.log("Received message")
