@@ -19,7 +19,7 @@ def socket_connected():
 def message_received(message):
     print(message)
 
-sio.connect('http://localhost:3000')
+sio.connect('http://localhost:8080')
 
 # defining a params dict for the parameters to be sent to the API 
 PARAMS = {'steps':0, 'calories':0,'meter':0,'heart_rate': 0} 
