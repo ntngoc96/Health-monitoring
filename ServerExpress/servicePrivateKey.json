@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "heart-rate-db",
+  "private_key_id": "841a67441b61ddeb0e8fdac8a41901062cbecafe",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCoW0b0RBZEgk/C\nFOMlYXNdPYeeE0HxmoBXzVJozX+4kdLixZl03qMhw8OdmvhfuzNKLbb2o8Eon5vU\nLHwz5yHHnlNuAHKQeTmbOWs7YFNxBIYunr5cTnuDL4xYzX0iMn2e8Zx0vX6/XmIM\nsRqmryXca9ogbEXVH+oUejS4nIPhF7FHkOYHje82EU4NLibtSN1++cFZvWt96pU2\n5y5qE9XAzcnmZPA+4kgFAAMoy9Ff0AmjWFKONfvAiSY591Tz6RrXpGkDufLfuwls\nTROmg2Tkhw0N6Ndjz6VxDguLdAn4ORtUWBYtqaRxuV9WDvQCrASSEQ0lI/lAaGzl\nMuqGCEzPAgMBAAECggEAT29R2SrO/uAlVcOZMSf70MCZXoJjmOV3LPZZrc1YN/PF\n9u2Y7EWn3uSJRbG7AyBGoPdU3qaBGvPECKY8rBigHZmcb8iSRYyNG6pJ6CgY9rhV\nv2VzGAaHzGwA4l2Cb0I3d2k0kvhd91lHFgnyMzdsu8W/k5DCmj6GqcbHXVur9eX9\n+76CYOeBG/MfxznhJ5btgIeCZt99jTKFzn9CdrVspjQCefnOJB8NxP2SftSSUY5n\n4ozPlR7kWPrva29j4lsR6rESPGCA5LpM4oHmeXmPN1FRxIRgDafDmxH49M9JnlRP\nO5SdSOsky8hrXMKgAevWUMQB+8T2g7e/EBZCmMUbMQKBgQDRCnHePXZR1vVWF029\nSg4Q5ulBcWJnf/km1zYkgFFp9kBOvhsUhp/ZpH5fsTJekIO6Yw11Zu7/bFVcoqp9\n2/jCC5ojo6EF4g9w9VDupzAYlrQInXKL8K1/rZGb4yi37SEcDtAZMFH5dMn8gGX/\nIygDs3PESshYHTlcksiOXH6LqwKBgQDOLSfJ2gFYKhsX4Yeo5IyrHl90vpkBI2mq\nXuvLW6lTI8bykoEgkVJ+PS1ySYbccokMVUxrUbYCkn+m5j2yCg43ASp33VnWnHMa\nhQC9TRSaw5yqanvJhT/GiGlPyzIupVz/QYaGJEQqSw+uS5WtSgy8VPeAdLOqNJm4\n+yDe8Zd/bQKBgAP7DvAMe5RTY5igGPrhziLEQuzcG+OcrEHxFzbaurIp3k+hjyJ0\n7dZXK5Dm7u6eEeQavsbdju+OQJHjBxwedD49ulGza/2QsHqWMVRaGrBdLlB7rxK7\nIpKr23n8eWoHOfouzgesw+LcNnx4dXjGUpy/bhTu16HV7KG2qdsMJ9zBAoGBAJri\nfz57IIFr+DiDe5ccQrSWN52LRYP+Z3XOoxJ9BIHpoZ4/AvRFV5RwPwDZTY+0F1KF\njcgddT8PcQgfdP+X4D/gB1hOmBvKIgotGnYbPrxY8QtwvReRm2x4s6x2+HbkUS2M\nuxNwkSi4hMoqDAJHW7PrnJcKlKHrrAOz3Gi/U1EtAoGBAKu6CUDKEvQI5hvWJI8M\n0c2zEnbDoTNeZDkW++kqIWOqeF4knukl3gg0z3dE9/03XZnnNTU5GWYDrFK7ml49\neiWDqj8R+17RMclCqcGZE0eS5152t//D9JzJafezURsNDNgt5ZGTst+PnFRBrNW+\nqwPahm9wSdGaxdM42+DvSI5S\n-----END PRIVATE KEY-----\n",
+  "client_email": "admin-306@heart-rate-db.iam.gserviceaccount.com",
+  "client_id": "108088325844974473150",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/admin-306%40heart-rate-db.iam.gserviceaccount.com"
+}
