@@ -3,6 +3,18 @@ var socket = require('socket.io');
 
 const admin = require('firebase-admin');
 
+const { spawn } = require('child_process');
+
+
+//path to Folder AppPython, modify before running server
+var pathWS = "../AppPython/";
+
+// options for spawn
+var defaults = {
+  cwd: pathWS,
+  env: process.env
+};
+
 const port = 8080;
 var app = express();
 var server = app.listen(port, function () {
@@ -110,3 +122,22 @@ app.get('/test-realtime', (req, res) => {
   res.send("real time started")
 })
 
+app.get('/live', (req, res) =>{
+  // command 
+  const mac = req.query.mac;
+  const example = spawn('python3', ['example.py', `-m ${mac}`, '-l'], defaults);
+  console.log("running...");
+  example.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  example.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  example.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
+})
+
+//ex: localhost:8080/live?mac=FD:B6:72:9B:46:3C
