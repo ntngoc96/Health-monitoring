@@ -38,8 +38,19 @@
     $ npm install
 ```
 
-  Run server (port 3000)
+  Run server (port 8080)
 
+```
+    $ npm start
+```
+# Installation Client Side
+  ## Install dependencies
+```
+    $ cd ..
+    $ cd client-side
+    $ npm i
+```
+  Run app
 ```
     $ npm start
 ```
