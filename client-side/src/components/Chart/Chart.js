@@ -24,11 +24,13 @@ class Chart extends Component {
         <Line
           data={this.props.data}
           options={{
+            responsive: true,
             title: {
               display: this.props.displayTitle,
-              text: 'Largest Cities In ' + this.props.location,
+              text: 'Heart rate monitoring of ' + this.props.name,
               fontSize: 25
             },
+            caretSize: 8,
             legend: {
               display: "this.props.displayLegend",
               position: "this.props.legendPosition"
@@ -41,15 +43,15 @@ class Chart extends Component {
                   color: "rgba(255,99,132,0.2)"
                 },
                 ticks: {
-                  min: 60,
-                  max: 90
+                  min: 0,
+                  max: 150
                 }
               }],
               xAxes: [{
                 gridLines: {
-                  display: false
+                  display: true
                 }
-              }]
+              }],
             },
             plugins: {
               datalabels: {
@@ -64,7 +66,7 @@ class Chart extends Component {
                 font: {
                   size: 22
                 },
-                align: "top "
+                align: "top",
               },
               
             }

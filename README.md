@@ -9,16 +9,16 @@
   ```
   - Turn on your Bluetooth
 
-  - Unpair you MiBand2 from current mobile apps
+  - Unpair you MiBand from current mobile apps
 
-  - Find out your MiBand3 MAC address
+  - Find out your MiBand MAC address
 
 ```
     $ sudo hcitool lescan
 ```
   - Run this to auth device
 ```
-    $ python3 example.py --mac F4:62:E8:D1:DB:82 --init
+    $ python3 example.py --mac YOUR-MAC --init
 ```
   - If you having problems(BLE can glitch sometimes)
 ```

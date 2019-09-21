@@ -1,33 +1,118 @@
-.App {
-  text-align: center;
+/* config */
+
+*{
+
+  box-sizing: border-box;
+  font-family: 'Open Sans Condensed', sans-serif;
+
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+/* GRID LAYOUT */
+
+/* .grid-container {
+  display: grid;
+  grid-template-columns: repeat(12,1fr);
+  grid-template-rows: repeat(4,1fr);
+  grid-gap: .6rem;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.calories { grid-area: 1 / 1 / 3 / 4; }
+
+.steps { grid-area: 3 / 1 / 5 / 4; }
+
+.heart-rate-chart { grid-area: 1 / 4 / 4 / 13; }
+
+.fat-burning { grid-area: 4 / 4 / 5 / 7; }
+
+.meter { grid-area: 4 / 7 / 5 / 10; }
+
+.excercise { grid-area: 4 / 10 / 5 / 13; } */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap:.8rem;
+}
+
+.calories { grid-area: 1 / 1 / 6 / 4; }
+
+.steps { grid-area: 6 / 1 / 11 / 4; }
+
+.heart-rate-chart { grid-area: 1 / 4 / 6 / 13; }
+
+.fat-burning { grid-area: 6 / 4 / 11 / 7; }
+
+.meter { grid-area: 6 / 7 / 11 / 10; }
+
+.excercise { grid-area: 6 / 10 / 11 / 13; }
+/* HOMEPAGE */
+
+.grid-container > div:not(:first-child) {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+
 }
 
-.App-link {
-  color: #61dafb;
+.calories,.meter,.fat-burning,.steps,.excercise{
+
+  border:1px solid dodgerblue;
+  border-radius: 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.grid-container{
+  padding:2rem;
 }
+  /* Heart rate chart */
+  .heart-rate-chart {
+    padding:0 1rem;
+  }
+
+  /* Calories */
+
+  .calories{
+    
+  }
+
+    .item-label{
+      display: inline-block;
+      font-size:1rem;
+    }
+
+    .item-value{
+      display: inline-block;
+      padding:.5rem;
+      font-size:2rem;
+    }
+
+    .item-icon{
+      width:7rem;
+      height:7rem;
+
+      padding:.5rem;
+
+      text-align: center;
+
+      border: 5px solid tomato;
+      border-radius: 50%;
+
+    }
+
+    .item-icon > i{
+      width:100%;
+
+      font-size: 4rem;
+
+      line-height: 5rem;
+    }
+
+  /* Meter */
+
+
+
+  /* Fat-burning */
+
+  /* Steps */
+
+  /* Excercise */

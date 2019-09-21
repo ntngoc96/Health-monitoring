@@ -12,11 +12,6 @@ from bluepy.btle import Peripheral, DefaultDelegate, ADDR_TYPE_RANDOM, BTLEExcep
 
 from constants import UUIDS, AUTH_STATES, ALERT_TYPES, QUEUE_TYPES
 
-# importing the requests library 
-import requests 
-# api-endpoint 
-URL = "https://idekz.sse.codesandbox.io/"
-
 class AuthenticationDelegate(DefaultDelegate):
 
     """This Class inherits DefaultDelegate to handle the authentication process."""
@@ -430,13 +425,13 @@ class MiBand2(Peripheral):
         rate = struct.unpack('bb', res)[1]
         return rate
 
-    def start_heart_rate_realtime(self, heart_measure_callback,step_count_callback):
+    def start_heart_rate_realtime(self, heart_measure_callback,steps_count_callback):
         char_m = self.svc_heart.getCharacteristics(UUIDS.CHARACTERISTIC_HEART_RATE_MEASURE)[0]
         char_d = char_m.getDescriptors(forUUID=UUIDS.NOTIFICATION_DESCRIPTOR)[0]
         char_ctrl = self.svc_heart.getCharacteristics(UUIDS.CHARACTERISTIC_HEART_RATE_CONTROL)[0]
 
         self.heart_measure_callback = heart_measure_callback
-        self.step_count_callback = step_count_callback
+        self.steps_count_callback = steps_count_callback
 
         # stop heart monitor continues & manual
         char_ctrl.write(b'\x15\x02\x00', True)
@@ -448,9 +443,9 @@ class MiBand2(Peripheral):
         t = time.time()
         while True:
             self.waitForNotifications(2)
+            # get steps - calories - fat-gramms - meter and pass to PARAMS
             PARAMS = self.get_steps()
-            # sio.emit("something", PARAMS)
-            self.step_count_callback(PARAMS)
+            self.steps_count_callback(PARAMS)
             self._parse_queue()
             # send ping request every 12 sec
             if (time.time() - t) >= 12:
