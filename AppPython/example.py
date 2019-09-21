@@ -2,6 +2,7 @@ import sys
 import struct
 import socketio
 import time
+import random
 import argparse
 from datetime import datetime
 from base import MiBand2
@@ -32,6 +33,7 @@ parser.add_argument('-l', '--live',  action='store_true',help='Measures live hea
 parser.add_argument('-i', '--init',  action='store_true',help='Initializes the device')
 parser.add_argument('-m', '--mac', required=True, help='Mac address of the device')
 parser.add_argument('-t', '--set_current_time', action='store_true',help='Set time')
+parser.add_argument('-k', '--testapp',  action='store_true',help='Test working of python code')
 
 
 args = parser.parse_args()
@@ -100,6 +102,53 @@ def s(x):
 if args.live:
     band.start_heart_rate_realtime(
             heart_measure_callback=l,
-            step_count_callback=s)
+            steps_count_callback=s)
 
+if args.testapp:
+    while 1:
+        rand = random.randrange(60,130)
+        sio.emit("heart_rate", {'heart_rate': rand})
+        time.sleep(3)
 band.disconnect()
+
+
+
+
+
+
+
+# /* Test without Miband */
+# import sys
+# import struct
+# import socketio
+# import time
+# import random
+# import argparse
+# from datetime import datetime
+# # from base import MiBand2
+# from constants import ALERT_TYPES
+
+# sio = socketio.Client()
+
+# @sio.on('connect')
+# def socket_connected():
+#     print("Connected")
+#     print(sio.eio.sid)
+
+
+# @sio.on("message")
+# def message_received(message):
+#     print(message)
+
+# sio.connect('http://localhost:8080')
+
+# parser = argparse.ArgumentParser()
+# parser.add_argument('-k', '--testapp',  action='store_true',help='Test working of python code')
+
+
+# args = parser.parse_args()
+# if args.testapp:
+#     while 1:
+#         rand = random.randrange(60,130)
+#         sio.emit("heart_rate", {'heart_rate': rand})
+#         time.sleep(3)
