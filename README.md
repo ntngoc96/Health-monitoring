@@ -1,44 +1,56 @@
-# NienLuan2019-HKII
+# Health Monitoring Realtime with socketio, firestore and Miband 2 
 
-# AppPython Side
-## Run
+# Installation Python Side
+  ## Install dependencies
+  ```
+    $ cd AppPython
 
-### Install dependencies
+    $ pip install -r requirements.txt
+  ```
+  - Turn on your Bluetooth
 
-  `cd AppPython`
+  - Unpair you MiBand from current mobile apps
 
-  `pip install -r requirements.txt`
+  - Find out your MiBand MAC address
 
-  Turn on your Bluetooth
+```
+    $ sudo hcitool lescan
+```
+  - Run this to auth device
+```
+    $ python3 example.py --mac YOUR-MAC --init
+```
+  - If you having problems(BLE can glitch sometimes)
+```
+    $ sudo hciconfig hci0 reset
+```
 
-  Unpair you MiBand2 from current mobile apps
+   ### If you have trouble installing bluepy
 
-  Find out your MiBand3 MAC address
+```
+    $ sudo apt-get install libglib2-dev 
+```
+# Installation Server Side
+  ## Install dependencies
+```
+    $ cd ..
+    $ cd ServerExpress
+    $ npm install
+```
 
-  ```sudo hcitool lescan```
+  Run server (port 8080)
 
-  Run this to auth device
-
-  ```python3 example.py --mac YOUR_MAC_ADDRESS --init```
-
-  If you having problems(BLE can glitch sometimes)
-
-  ```sudo hciconfig hci0 reset```
-
-### If you have trouble installing bluepy
-
-  ```sudo apt-get install libglib2-dev  ```
-
-  Move to root folder
-  `cd ..`
-# Server Side
-
-  `cd ServerExpress`
-
-## Install dependencies
-
-  `npm install`
-
-  Run server (port 3000)
-
-  `npm start`
+```
+    $ npm start
+```
+# Installation Client Side
+  ## Install dependencies
+```
+    $ cd ..
+    $ cd client-side
+    $ npm i
+```
+  Run app
+```
+    $ npm start
+```
