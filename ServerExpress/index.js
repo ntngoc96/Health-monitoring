@@ -3,7 +3,7 @@ var socket = require('socket.io');
 var fs = require('fs');
 const admin = require('firebase-admin');
 
-const { spawn } = require('child_process');
+const { exec, spawn } = require('child_process');
 
 
 //path to Folder AppPython, modify before running server
@@ -51,15 +51,15 @@ function createFolder(foldername){
 
 var hearts = {
   "data" : [],
-  appendData: function(hData){
-    return this.data.push(hData)
-  }
+  appendData: function(t,mData){
+    return this.data.push({"time":t,"hearts": mData})
+  },
 };
 var stepsAndCalories = {
   "data" : [],
-  appendData: function(sData){
-    return this.data.push(sData)
-  }
+  appendData: function(t,mData){
+    return this.data.push({"time":t,"stepsAndCalories": mData})
+  },
 }
 
 io.on("connection", function (socket) {
@@ -74,13 +74,19 @@ io.on("connection", function (socket) {
   socket.on("heart_rate", function (data) {
     let current_datetime = new Date();
     let current_hours = current_datetime.getHours().toString();
+    let current_minutes = current_datetime.getMinutes().toString();
+    let current_seconds = current_datetime.getSeconds().toString();
+    if(parseInt(current_seconds) < 10){
+      current_seconds = "0"+current_seconds 
+    }
+    let receivedTime = current_hours+":"+current_minutes +":"+current_seconds;
     //chunkData.push(data)
-    console.log("Received heart_rate", data);
+    //sconsole.log("Received heart_rate", data);
     //hearts.appendData(chunkData.shift())
-    hearts.appendData(data)
+    hearts.appendData(receivedTime, data)
     let savedData = JSON.stringify(hearts, null, "\t")
     var pathToHeartsDatabases = createFolder("Hearts");
-    console.log("Write Received heart_rate to File: ", savedData)
+    //console.log("Write Received heart_rate to File: ", savedData)
     if(fs.existsSync(pathToHeartsDatabases)){
       fs.writeFile(`${pathToHeartsDatabases}/${current_hours}h.json`, savedData, (err)=>{
         if(err) throw err;
@@ -104,11 +110,17 @@ io.on("connection", function (socket) {
   socket.on("steps", function (data) {
     let current_datetime = new Date();
     let current_hours = current_datetime.getHours().toString();
+    let current_minutes = current_datetime.getMinutes().toString();
+    let current_seconds = current_datetime.getSeconds().toString();
+    if(parseInt(current_seconds) < 10){
+      current_seconds = "0"+current_seconds 
+    }
+    let receivedTime = current_hours+":"+current_minutes +":"+current_seconds;
     console.log("Received steps and ...");
-    stepsAndCalories.appendData(data)
+    stepsAndCalories.appendData(receivedTime, data)
     let savedData = JSON.stringify(stepsAndCalories, null, "\t");
     let pathToStepsDatabases = createFolder("StepsAndCalories");
-    console.log("Write Received Steps to File: ", savedData)
+    //console.log("Write Received Steps to File: ", savedData)
     
   
     if(fs.existsSync(pathToStepsDatabases)){
@@ -122,7 +134,7 @@ io.on("connection", function (socket) {
         //console.log("Created Steps Folder")
       });
     }
-    console.log(data);
+    //console.log(data);
     docRef.update(data);
   })
 
@@ -210,7 +222,7 @@ app.get('/test-realtime', (req, res) => {
 app.get('/live', (req, res) =>{
 
   // command 
-  const mac = req.query.mac;
+  let mac = req.query.mac;
   const example = spawn('python3', ['example.py', `-m ${mac}`, '-l'], defaults);
   console.log("running...");
   example.stdout.on('data', (data) => {
@@ -224,9 +236,21 @@ app.get('/live', (req, res) =>{
 
   example.on('close', (code) => {
     console.log(`child process exited with code ${code}`);
+    res.redirect("/")
   });
 })
 
 //ex: localhost:8080/live?mac=FD:B6:72:9B:46:3C
 
+// stop send data to client 
+app.get('/stop', (req, res) => {
+  try{
+    let mac = req.query.mac;
+    exec(`kill -9 $(ps aux | pgrep -f "python3 example.py -m ${mac} -l")`);
+    //res.redirect("/");
+  }catch(err){
+    console.log(err);
+  }
+});
+//ex: localhost:8080/stop?mac=FD:B6:72:9B:46:3C
 
