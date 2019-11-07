@@ -1,6 +1,6 @@
 var express = require('express');
 var socket = require('socket.io');
-
+var fs = require('fs');
 const admin = require('firebase-admin');
 
 const { spawn } = require('child_process');
@@ -14,6 +14,10 @@ var defaults = {
   cwd: pathWS,
   env: process.env
 };
+//get Time
+// let current_datetime = new Date();
+// let current_minutes = current_datetime.getMinutes().toString();
+
 
 const port = 8080;
 var app = express();
@@ -33,16 +37,63 @@ let db = admin.firestore();
 /* Start Socket on server */
 var io = socket(server, { pingTimeout: 60000 });
 
+function createFolder(foldername){
+  let current_datetime = new Date();  
+  //var current_datetime = new Date()
+  var formatted_date = current_datetime.getFullYear() + "_" 
+                      + (current_datetime.getMonth() + 1) + "_" 
+                      + current_datetime.getDate();
+  //var current_minutes = current_datetime.getMinutes().toString();
+  var pathFolder = __dirname + `/Databases/${foldername}/${formatted_date}`;
+  return pathFolder;
+  //${JSON.stringify(formatted_date)}HealthData
+}
+
+var hearts = {
+  "data" : [],
+  appendData: function(hData){
+    return this.data.push(hData)
+  }
+};
+var stepsAndCalories = {
+  "data" : [],
+  appendData: function(sData){
+    return this.data.push(sData)
+  }
+}
+
 io.on("connection", function (socket) {
   console.log("socket.io connected " + socket.id)
-
+  
   /* Connect to Firestore */
   let docRef = db.collection('users').doc('A0zUndNcLS1FwT6OIRYj').collection('health-monitoring').doc('12-9-2019')
-
+  
+  // Create Write Stream
+  //let wstream = fs.createWriteStream('health-monitoring.txt', {flags: "a"});
   // Listen heart rate data from Python Application
   socket.on("heart_rate", function (data) {
-    console.log("Received heart_rate");
-    console.log(data);
+    let current_datetime = new Date();
+    let current_hours = current_datetime.getHours().toString();
+    //chunkData.push(data)
+    console.log("Received heart_rate", data);
+    //hearts.appendData(chunkData.shift())
+    hearts.appendData(data)
+    let savedData = JSON.stringify(hearts, null, "\t")
+    var pathToHeartsDatabases = createFolder("Hearts");
+    console.log("Write Received heart_rate to File: ", savedData)
+    if(fs.existsSync(pathToHeartsDatabases)){
+      fs.writeFile(`${pathToHeartsDatabases}/${current_hours}h.json`, savedData, (err)=>{
+        if(err) throw err;
+        //console.log("written Heart")
+      })
+    }else{
+      fs.mkdir(pathToHeartsDatabases, {recursive: true}, (err) =>{
+        if(err) throw err;
+        //console.log("Created Hearts Folder")
+      });
+    }
+   
+  
     // Update data
     docRef.update(data);
     // Send to ESP8266
@@ -51,7 +102,26 @@ io.on("connection", function (socket) {
 
   // Listen steps - calories - fatburn - meter from Python Application
   socket.on("steps", function (data) {
+    let current_datetime = new Date();
+    let current_hours = current_datetime.getHours().toString();
     console.log("Received steps and ...");
+    stepsAndCalories.appendData(data)
+    let savedData = JSON.stringify(stepsAndCalories, null, "\t");
+    let pathToStepsDatabases = createFolder("StepsAndCalories");
+    console.log("Write Received Steps to File: ", savedData)
+    
+  
+    if(fs.existsSync(pathToStepsDatabases)){
+      fs.writeFile(`${pathToStepsDatabases}/${current_hours}h.json`, savedData, (err)=>{
+        //if(err) throw err;
+        //console.log("written Steps")
+      })
+    }else{
+      fs.mkdir(pathToStepsDatabases, {recursive: true}, (err) =>{
+        if(err) throw err;
+        //console.log("Created Steps Folder")
+      });
+    }
     console.log(data);
     docRef.update(data);
   })
@@ -138,16 +208,18 @@ app.get('/test-realtime', (req, res) => {
 })
 */
 app.get('/live', (req, res) =>{
+
   // command 
   const mac = req.query.mac;
   const example = spawn('python3', ['example.py', `-m ${mac}`, '-l'], defaults);
   console.log("running...");
   example.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
+    //console.log(`stdout: ${data}`);
+    //console.log(typeof(data))
   });
 
   example.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
+    //console.error(`string_decoder.StringDecoder(encoding);: ${data}`);
   });
 
   example.on('close', (code) => {
@@ -156,4 +228,5 @@ app.get('/live', (req, res) =>{
 })
 
 //ex: localhost:8080/live?mac=FD:B6:72:9B:46:3C
+
 
