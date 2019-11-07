@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import firebase from "firebase";
 
@@ -156,51 +156,3 @@ class App extends Component {
 export default App;
 
 
-// function App() {
-
-  //   const [heart_rate, setheart_rate] = useState(0);
-
-  //   function writeData() {
-  //     // Add a new document in collection "cities"
-  //     db.collection("cities").doc("LA").set({
-  //       name: "Los Angeles",
-  //       state: "CA",
-  //       heart_ratery: "USA"
-  //     })
-  //       .then(function () {
-  //         console.log("Document successfully written!");
-  //       })
-  //       .catch(function (error) {
-  //         console.error("Error writing document: ", error);
-  //       });
-  //   }
-
-  //   function fetchData() {
-  //     db.collection("cities")
-  //       .get()
-  //       .then(querySnapshot => {
-  //         const data = querySnapshot.docs.map(doc => doc.data());
-  //         console.log(data); // array of cities objects
-  //       });
-  //   }
-
-  //   function listenRealtime(){
-
-  //     db.collection('users').doc('A0zUndNcLS1FwT6OIRYj').collection('health-monitoring').doc('12-9-2019').onSnapshot(function(doc) {
-  //       // console.log("Current data: ", doc.data());
-  //       setheart_rate(doc.data().heart_rate);
-  //       // return doc.data().heart_rate;
-  //     });
-
-
-  //   }
-  //   listenRealtime()
-  //   return (
-  //     <div className="App">
-  //       Hello
-  //       {}
-  //       {heart_rate === 0 && <Chart heart_rate={heart_rate}/>} 
-  //       {heart_rate !== 0 && "Loading..."} 
-  //     </div>
-  //   );
-  // }

@@ -29,18 +29,25 @@ io.on("connection", function (socket) {
 
   // Listen heart rate data from Python Application
   socket.on("heart_rate", function (data) {
-    console.log("Received heart_rate");
-    console.log(data);
+    //LED = 0 -> Normal, LED = 1 -> Warning, LED = 2 -> Danger
+    let alertLED = 0;
+    let { heart_rate } = data;
+    if (heart_rate < 40 || heart_rate > 160) {
+      alertLED = 2;
+    } else if (heart_rate < 60 || heart_rate > 120) {
+      alertLED = 1;
+    } else {
+      alertLED = 0;
+    }
+
     // Update data
     docRef.update(data);
     // Send to ESP8266
-    io.sockets.emit("heart_rate",data.heart_rate);
+    io.sockets.emit("heart_rate", { heart_rate, alertLED });
   })
 
   // Listen steps - calories - fatburn - meter from Python Application
   socket.on("steps", function (data) {
-    console.log("Received steps and ...");
-    console.log(data);
     docRef.update(data);
   })
 
@@ -62,7 +69,7 @@ app.get('/', (req, res) => {
   res.send('doneee');
 })
 
-/* Testing function 
+/* Testing function
 app.get('/get-data', (req, res) => {
   db.collection('users').get()
     .then((snapshot) => {
