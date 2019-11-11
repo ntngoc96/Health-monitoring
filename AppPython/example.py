@@ -74,6 +74,7 @@ if args.standard:
     print ('Hardware revision:',band.get_hrdw_revision())
     print ('Serial:',band.get_serial())
     print ('Battery:', band.get_battery_info())
+    print("type of battery_info: ", type(band.get_battery_info()))
     print ('Time:', band.get_current_time())
     print ('Steps:', band.get_steps())
     print ('Heart rate oneshot:', band.get_heart_rate_one_time())
@@ -89,9 +90,11 @@ def l(x):
     sio.emit("heart_rate", { 'heart': x})
 
 
-def b(x):
-    print ('Raw heart:', x)
 
+
+
+def p(x):
+    sio.emit("battery", band.get_battery_info()) 
 
 def f(x):
     print ('Raw accel heart:', x)
@@ -99,10 +102,16 @@ def f(x):
 def s(x):
     print ('Steps: ', x)
     sio.emit('steps',x)
+def b(x):
+    print ('Raw heart:', x)
 if args.live:
     band.start_heart_rate_realtime(
             heart_measure_callback=l,
-            steps_count_callback=s)
+            steps_count_callback=s,
+            battery_info_callback=p)
+    
+
+
 
 if args.testapp:
     while 1:

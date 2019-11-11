@@ -216,7 +216,7 @@ class MiBand2(Peripheral):
 
     def _parse_raw_accel(self, bytes):
         res = []
-        for i in xrange(3):
+        for i in range(3):
             g = struct.unpack('hhh', bytes[2 + i * 6:8 + i * 6])
             res.append({'x': g[0], 'y': g[1], 'wtf': g[2]})
         # WTF
@@ -253,8 +253,8 @@ class MiBand2(Peripheral):
         level = struct.unpack('b', bytes[1:2])[0] if len(bytes) >= 2 else None
         last_level = struct.unpack('b', bytes[19:20])[0] if len(bytes) >= 20 else None
         status = 'normal' if struct.unpack('b', bytes[2:3])[0] == 0 else "charging"
-        datetime_last_charge = self._parse_date(bytes[11:18])
-        datetime_last_off = self._parse_date(bytes[3:10])
+        #datetime_last_charge = self._parse_date(bytes[11:18])
+        #datetime_last_off = self._parse_date(bytes[3:10])
 
         # WTF?
         # struct.unpack('b', bytes[10])
@@ -266,8 +266,8 @@ class MiBand2(Peripheral):
             "level": level,
             "last_level": last_level,
             "last_level": last_level,
-            "last_charge": datetime_last_charge,
-            "last_off": datetime_last_off
+            #"last_charge": datetime_last_charge,
+            #"last_off": datetime_last_off
         }
         return res
 
@@ -425,13 +425,14 @@ class MiBand2(Peripheral):
         rate = struct.unpack('bb', res)[1]
         return rate
 
-    def start_heart_rate_realtime(self, heart_measure_callback,steps_count_callback):
+    def start_heart_rate_realtime(self, heart_measure_callback,steps_count_callback,battery_info_callback):
         char_m = self.svc_heart.getCharacteristics(UUIDS.CHARACTERISTIC_HEART_RATE_MEASURE)[0]
         char_d = char_m.getDescriptors(forUUID=UUIDS.NOTIFICATION_DESCRIPTOR)[0]
         char_ctrl = self.svc_heart.getCharacteristics(UUIDS.CHARACTERISTIC_HEART_RATE_CONTROL)[0]
 
         self.heart_measure_callback = heart_measure_callback
         self.steps_count_callback = steps_count_callback
+        self.battery_info_callback = battery_info_callback
 
         # stop heart monitor continues & manual
         char_ctrl.write(b'\x15\x02\x00', True)
@@ -446,6 +447,8 @@ class MiBand2(Peripheral):
             # get steps - calories - fat-gramms - meter and pass to PARAMS
             PARAMS = self.get_steps()
             self.steps_count_callback(PARAMS)
+            battery_level = self.get_battery_info().get("level")
+            self.battery_info_callback(battery_level)
             self._parse_queue()
             # send ping request every 12 sec
             if (time.time() - t) >= 12:
