@@ -5,7 +5,8 @@ const admin = require('firebase-admin');
 
 const { exec, spawn } = require('child_process');
 
-
+//set MaxListenner
+require('events').EventEmitter.defaultMaxListeners =100;
 //path to Folder AppPython, modify before running server
 var pathWS = "../AppPython/";
 
@@ -96,10 +97,15 @@ io.on("connection", function (socket) {
       fs.mkdir(pathToHeartsDatabases, {recursive: true}, (err) =>{
         if(err) throw err;
         //console.log("Created Hearts Folder")
+        fs.writeFile(`${pathToHeartsDatabases}/${current_hours}h.json`, savedData, (err)=>{
+          if(err) throw err;
+          //console.log("written Heart")
+        })
       });
     }
    
-  
+   
+
     // Update data
     docRef.update(data);
     // Send to ESP8266
@@ -125,17 +131,24 @@ io.on("connection", function (socket) {
   
     if(fs.existsSync(pathToStepsDatabases)){
       fs.writeFile(`${pathToStepsDatabases}/${current_hours}h.json`, savedData, (err)=>{
-        //if(err) throw err;
-        //console.log("written Steps")
+        if(err) throw err;
+        console.log("written Steps")
       })
     }else{
       fs.mkdir(pathToStepsDatabases, {recursive: true}, (err) =>{
         if(err) throw err;
         //console.log("Created Steps Folder")
+        fs.writeFile(`${pathToStepsDatabases}/${current_hours}h.json`, savedData, (err)=>{
+          if(err) throw err;
+          console.log("written Steps")
+        })
       });
     }
     //console.log(data);
     docRef.update(data);
+  })
+   socket.on("battery", function(data){
+      console.log("battery information: ", data);
   })
 
 })
@@ -232,6 +245,7 @@ app.get('/live', (req, res) =>{
 
   example.stderr.on('data', (data) => {
     //console.error(`string_decoder.StringDecoder(encoding);: ${data}`);
+
   });
 
   example.on('close', (code) => {
@@ -247,10 +261,31 @@ app.get('/stop', (req, res) => {
   try{
     let mac = req.query.mac;
     exec(`kill -9 $(ps aux | pgrep -f "python3 example.py -m ${mac} -l")`);
-    //res.redirect("/");
+    res.redirect("/live");
   }catch(err){
     console.log(err);
   }
 });
 //ex: localhost:8080/stop?mac=FD:B6:72:9B:46:3C
 
+app.get('/api/data/hearts', (req, res) => {
+  let date = req.query.date;
+  let hour = req.query.hour;
+  fs.readFile(__dirname +`/Databases/Hearts/${date}/${hour}h.json`, 'utf-8', (err, data) => {
+    if(err) throw err;
+    objData = JSON.parse(data);
+    console.log(objData.data);
+    res.redirect('/api/data/hearts')
+  });
+})
+
+
+app.get('/api/data/steps', (req, res) => {
+  let date = req.query.date;
+  let hour = req.query.hour;
+  fs.readFile(__dirname +`/Databases/StepsAndCalories/${date}/${hour}h.json`, 'utf-8', (err, data) => {
+    if(err) throw err;
+    objData = JSON.parse(data);
+    console.log(objData.data);
+  });
+})
