@@ -73,6 +73,8 @@ io.on("connection", function (socket) {
   //let wstream = fs.createWriteStream('health-monitoring.txt', {flags: "a"});
   // Listen heart rate data from Python Application
   socket.on("heart_rate", function (data) {
+    console.log(data);
+    
     let current_datetime = new Date();
     let current_hours = current_datetime.getHours().toString();
     let current_minutes = current_datetime.getMinutes().toString();
