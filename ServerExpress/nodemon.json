@@ -1,0 +1,3 @@
+{   
+    "ignore": ["Databases/Hearts/2019_11_13/*.json","Databases/StepsAndCalories/2019_11_13/*.json", "README"] 
+}

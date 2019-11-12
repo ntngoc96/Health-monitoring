@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Bar, Line, Pie } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import 'chartjs-plugin-datalabels';
 
 
 class Chart extends Component {
-  constructor(props) {
-    super(props);
 
-  }
 
   componentDidMount() {
   }

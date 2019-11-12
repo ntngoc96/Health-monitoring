@@ -18,14 +18,14 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <ul>
-            <li>
+          <ul className="d-flex flex-row nav-bar">
+            <li className="p-3">
               <Link to="/">Home</Link>
             </li>
-            <li>
+            <li className="p-3">
               <Link to="/control-panel">Control Panel</Link>
             </li>
-            <li>
+            <li className="p-3">
               <Link to="/heart">Heart</Link>
             </li>
           </ul>
@@ -59,29 +59,6 @@ class App extends Component {
   }
 }
 
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
-}
-
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  );
-}
-
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
-    </div>
-  );
-}
 
 
 

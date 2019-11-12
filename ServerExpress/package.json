@@ -7,6 +7,9 @@
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "nodemonConfig": {
+    "ignore": ["Databases/Hearts/2019_11_12/*.json", "README"] 
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

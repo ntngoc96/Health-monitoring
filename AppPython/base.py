@@ -396,12 +396,12 @@ class MiBand2(Peripheral):
         meters = struct.unpack('h', a[5:7])[0] if len(a) >= 7 else None
         fat_gramms = struct.unpack('h', a[2:4])[0] if len(a) >= 4 else None
         # why only 1 byte??
-        callories = struct.unpack('b', a[9:10])[0] if len(a) >= 10 else None
+        calories = struct.unpack('b', a[9:10])[0] if len(a) >= 10 else None
         return {
             "steps": steps,
             "meters": meters,
             "fat_gramms": fat_gramms,
-            "callories": callories
+            "calories": calories
 
         }
 

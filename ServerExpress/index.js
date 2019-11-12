@@ -5,8 +5,10 @@ const admin = require('firebase-admin');
 
 const { exec, spawn } = require('child_process');
 
+let stdFlag = false;
+
 //set MaxListenner
-require('events').EventEmitter.defaultMaxListeners =100;
+require('events').EventEmitter.defaultMaxListeners = 100;
 //path to Folder AppPython, modify before running server
 var pathWS = "../AppPython/";
 
@@ -38,12 +40,12 @@ let db = admin.firestore();
 /* Start Socket on server */
 var io = socket(server, { pingTimeout: 60000 });
 
-function createFolder(foldername){
-  let current_datetime = new Date();  
+function createFolder(foldername) {
+  let current_datetime = new Date();
   //var current_datetime = new Date()
-  var formatted_date = current_datetime.getFullYear() + "_" 
-                      + (current_datetime.getMonth() + 1) + "_" 
-                      + current_datetime.getDate();
+  var formatted_date = current_datetime.getFullYear() + "_"
+    + (current_datetime.getMonth() + 1) + "_"
+    + current_datetime.getDate();
   //var current_minutes = current_datetime.getMinutes().toString();
   var pathFolder = __dirname + `/Databases/${foldername}/${formatted_date}`;
   return pathFolder;
@@ -51,38 +53,44 @@ function createFolder(foldername){
 }
 
 var hearts = {
-  "data" : [],
-  appendData: function(t,mData){
-    return this.data.push({"time":t,"hearts": mData})
+  "data": [],
+  appendData: function (t, mData) {
+    return this.data.push({ "time": t, "hearts": mData })
   },
 };
 var stepsAndCalories = {
-  "data" : [],
-  appendData: function(t,mData){
-    return this.data.push({"time":t,"stepsAndCalories": mData})
+  "data": [],
+  appendData: function (t, mData) {
+    return this.data.push({ "time": t, "stepsAndCalories": mData })
   },
 }
 
 io.on("connection", function (socket) {
-  console.log("socket.io connected " + socket.id)
-  
+  console.log("socket.io connected " + socket.id);
+
+  let date = new Date();
+
+
   /* Connect to Firestore */
-  let docRef = db.collection('users').doc('A0zUndNcLS1FwT6OIRYj').collection('health-monitoring').doc('12-9-2019')
-  
+  let healthMonitoring = db.collection('health-monitoring').doc(`${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`);
+
+  let setWithOptions = healthMonitoring.set({}, { merge: true });
+  let docRef = db.collection('health-monitoring').doc(`${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`);
+
   // Create Write Stream
   //let wstream = fs.createWriteStream('health-monitoring.txt', {flags: "a"});
   // Listen heart rate data from Python Application
   socket.on("heart_rate", function (data) {
     console.log(data);
-    
+
     let current_datetime = new Date();
     let current_hours = current_datetime.getHours().toString();
     let current_minutes = current_datetime.getMinutes().toString();
     let current_seconds = current_datetime.getSeconds().toString();
-    if(parseInt(current_seconds) < 10){
-      current_seconds = "0"+current_seconds 
+    if (parseInt(current_seconds) < 10) {
+      current_seconds = "0" + current_seconds
     }
-    let receivedTime = current_hours+":"+current_minutes +":"+current_seconds;
+    let receivedTime = current_hours + ":" + current_minutes + ":" + current_seconds;
     //chunkData.push(data)
     //sconsole.log("Received heart_rate", data);
     //hearts.appendData(chunkData.shift())
@@ -90,28 +98,28 @@ io.on("connection", function (socket) {
     let savedData = JSON.stringify(hearts, null, "\t")
     var pathToHeartsDatabases = createFolder("Hearts");
     //console.log("Write Received heart_rate to File: ", savedData)
-    if(fs.existsSync(pathToHeartsDatabases)){
-      fs.writeFile(`${pathToHeartsDatabases}/${current_hours}h.json`, savedData, (err)=>{
-        if(err) throw err;
+    if (fs.existsSync(pathToHeartsDatabases)) {
+      fs.writeFile(`${pathToHeartsDatabases}/${current_hours}h.json`, savedData, (err) => {
+        if (err) throw err;
         //console.log("written Heart")
       })
-    }else{
-      fs.mkdir(pathToHeartsDatabases, {recursive: true}, (err) =>{
-        if(err) throw err;
+    } else {
+      fs.mkdir(pathToHeartsDatabases, { recursive: true }, (err) => {
+        if (err) throw err;
         //console.log("Created Hearts Folder")
-        fs.writeFile(`${pathToHeartsDatabases}/${current_hours}h.json`, savedData, (err)=>{
-          if(err) throw err;
+        fs.writeFile(`${pathToHeartsDatabases}/${current_hours}h.json`, savedData, (err) => {
+          if (err) throw err;
           //console.log("written Heart")
         })
       });
     }
-   
-   
+
+
 
     // Update data
     docRef.update(data);
     // Send to ESP8266
-    io.sockets.emit("heart_rate",data.heart_rate);
+    io.sockets.emit("heart_rate", data.heart_rate);
   })
 
   // Listen steps - calories - fatburn - meter from Python Application
@@ -120,28 +128,28 @@ io.on("connection", function (socket) {
     let current_hours = current_datetime.getHours().toString();
     let current_minutes = current_datetime.getMinutes().toString();
     let current_seconds = current_datetime.getSeconds().toString();
-    if(parseInt(current_seconds) < 10){
-      current_seconds = "0"+current_seconds 
+    if (parseInt(current_seconds) < 10) {
+      current_seconds = "0" + current_seconds
     }
-    let receivedTime = current_hours+":"+current_minutes +":"+current_seconds;
+    let receivedTime = current_hours + ":" + current_minutes + ":" + current_seconds;
     console.log("Received steps and ...");
     stepsAndCalories.appendData(receivedTime, data)
     let savedData = JSON.stringify(stepsAndCalories, null, "\t");
     let pathToStepsDatabases = createFolder("StepsAndCalories");
     //console.log("Write Received Steps to File: ", savedData)
-    
-  
-    if(fs.existsSync(pathToStepsDatabases)){
-      fs.writeFile(`${pathToStepsDatabases}/${current_hours}h.json`, savedData, (err)=>{
-        if(err) throw err;
+
+
+    if (fs.existsSync(pathToStepsDatabases)) {
+      fs.writeFile(`${pathToStepsDatabases}/${current_hours}h.json`, savedData, (err) => {
+        if (err) throw err;
         console.log("written Steps")
       })
-    }else{
-      fs.mkdir(pathToStepsDatabases, {recursive: true}, (err) =>{
-        if(err) throw err;
+    } else {
+      fs.mkdir(pathToStepsDatabases, { recursive: true }, (err) => {
+        if (err) throw err;
         //console.log("Created Steps Folder")
-        fs.writeFile(`${pathToStepsDatabases}/${current_hours}h.json`, savedData, (err)=>{
-          if(err) throw err;
+        fs.writeFile(`${pathToStepsDatabases}/${current_hours}h.json`, savedData, (err) => {
+          if (err) throw err;
           console.log("written Steps")
         })
       });
@@ -149,8 +157,8 @@ io.on("connection", function (socket) {
     //console.log(data);
     docRef.update(data);
   })
-   socket.on("battery", function(data){
-      console.log("battery information: ", data);
+  socket.on("battery", function (data) {
+    console.log("battery information: ", data);
   })
 
 })
@@ -234,60 +242,87 @@ app.get('/test-realtime', (req, res) => {
   res.send("real time started")
 })
 */
-app.get('/live', (req, res) =>{
+app.get('/live', (req, res) => {
 
-  // command 
-  let mac = req.query.mac;
-  const example = spawn('python3', ['example.py', `-m ${mac}`, '-l'], defaults);
-  console.log("running...");
-  example.stdout.on('data', (data) => {
-    //console.log(`stdout: ${data}`);
-    //console.log(typeof(data))
-  });
+  try {
+    // command 
+    let mac = req.query.mac;
+    const example = spawn('python3', ['example.py', `-m ${mac}`, '-l'], defaults);
+    console.log("running...");
+    example.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+      console.log(typeof (data));
+    });
 
-  example.stderr.on('data', (data) => {
-    //console.error(`string_decoder.StringDecoder(encoding);: ${data}`);
+    example.stderr.on('data', (data) => {
+      //console.error(`string_decoder.StringDecoder(encoding);: ${data}`);
 
-  });
+    });
 
-  example.on('close', (code) => {
-    console.log(`child process exited with code ${code}`);
-    res.redirect("/")
-  });
+    example.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
+    res.status(200).json({ msg: "Start server successfully" });
+
+  } catch (error) {
+    res.status(500).json({ msg: "Server error" });
+  }
+
 })
 
 //ex: localhost:8080/live?mac=FD:B6:72:9B:46:3C
 
 // stop send data to client 
 app.get('/stop', (req, res) => {
-  try{
+  try {
     let mac = req.query.mac;
     exec(`kill -9 $(ps aux | pgrep -f "python3 example.py -m ${mac} -l")`);
-    res.redirect("/live");
-  }catch(err){
+    res.status(200).json({ msg: "Stop device successfully" });
+  } catch (err) {
     console.log(err);
+    res.status(500).json(err);
   }
 });
 //ex: localhost:8080/stop?mac=FD:B6:72:9B:46:3C
 
 app.get('/api/data/hearts', (req, res) => {
-  let date = req.query.date;
-  let hour = req.query.hour;
-  fs.readFile(__dirname +`/Databases/Hearts/${date}/${hour}h.json`, 'utf-8', (err, data) => {
-    if(err) throw err;
-    objData = JSON.parse(data);
-    console.log(objData.data);
-    res.redirect('/api/data/hearts')
-  });
+  try {
+    const { day, month, year,hour } = req.query;
+    fs.readFile(__dirname + `/Databases/Hearts/${year}_${month}_${day}/${hour}`, 'utf-8', (err, data) => {
+      if (err) {
+        console.log(err);
+
+      }
+      objData = JSON.parse(data);
+      res.status(200).json(objData.data)
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json(error)
+  }
 })
 
 
 app.get('/api/data/steps', (req, res) => {
   let date = req.query.date;
   let hour = req.query.hour;
-  fs.readFile(__dirname +`/Databases/StepsAndCalories/${date}/${hour}h.json`, 'utf-8', (err, data) => {
-    if(err) throw err;
+  fs.readFile(__dirname + `/Databases/StepsAndCalories/${date}/${hour}h.json`, 'utf-8', (err, data) => {
+    if (err) throw err;
     objData = JSON.parse(data);
     console.log(objData.data);
   });
 })
+
+app.get('/api/data/getFiles', (req, res) => {
+  const { day, month, year, type } = req.query;
+  fs.readdir(__dirname + `/Databases/${type}/${year}_${month}_${day}`, function (err, filenames) {
+    if (err) {
+      console.log(err);
+
+      res.status(400).json(err)
+    }
+    res.status(200).json(filenames)
+  });
+})
+
