@@ -59,6 +59,8 @@ export class Data extends Component {
     const { day, month, year, type } = this.state;
 
     const response = await Axios.get(`/api/data/getFiles?day=${day}&month=${month}&year=${year}&type=${type}`);
+    console.log(response.data);
+    
     if (response.status === 200) {
       this.setState({
         files: response.data
@@ -69,6 +71,8 @@ export class Data extends Component {
 
   render() {
     const { day, month, year, files, modal,fileContent } = this.state;
+    console.log(fileContent);
+    
     return (
       <div>
         <Row>
@@ -109,7 +113,7 @@ export class Data extends Component {
                     </FormGroup>
                   </FormGroup>
                 </Col>
-                <Col sm={3}><Button>Start device</Button></Col>
+                <Col sm={3}><Button>Get files data</Button></Col>
               </FormGroup>
             </Form>
           </Col>

@@ -23,7 +23,7 @@ class App extends Component {
               <Link to="/">Home</Link>
             </li>
             <li className="p-3">
-              <Link to="/control-panel">Control Panel</Link>
+              <Link to="/data">Data</Link>
             </li>
             <li className="p-3">
               <Link to="/heart">Heart</Link>
@@ -40,11 +40,8 @@ class App extends Component {
           of them to render at a time
         */}
           <Switch>
-            <Route exact path="/control-panel">
-              <ControlPanel />
-            </Route>
             <Route exact path="/">
-              <Homepage />
+              <Heart />
             </Route>
             <Route exact path="/heart">
               <Heart />

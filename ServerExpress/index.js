@@ -81,7 +81,7 @@ io.on("connection", function (socket) {
   //let wstream = fs.createWriteStream('health-monitoring.txt', {flags: "a"});
   // Listen heart rate data from Python Application
   socket.on("heart_rate", function (data) {
-    console.log(data);
+    console.log(`heart rate`,data);
 
     let current_datetime = new Date();
     let current_hours = current_datetime.getHours().toString();
@@ -179,69 +179,6 @@ app.get('/', (req, res) => {
   res.send('doneee');
 })
 
-/* Testing function 
-app.get('/get-data', (req, res) => {
-  db.collection('users').get()
-    .then((snapshot) => {
-      snapshot.forEach((doc) => {
-        console.log(doc.id, '=>', doc.data());
-      });
-    })
-    .catch((err) => {
-      console.log('Error getting documents', err);
-    });
-  res.send("get-data")
-})
-
-app.get('/send-data', (req, res) => {
-  let docRef = db.collection('users').doc('A0zUndNcLS1FwT6OIRYj').collection('health-monitoring').doc('12-9-2019')
-  let setAda = docRef.update({
-    heart_rate: '99',
-    steps: '50',
-    calories: '1000'
-  });
-  res.send("send-data")
-})
-
-app.get('/test-realtime', (req, res) => {
-  let steps = 100;
-  let calories = 0;
-  let fat_burn = 1;
-  let meter = 0;
-  setInterval(() => {
-    let heart_rate = Math.ceil(Math.random()*50) + 70
-    db.collection('users').doc('A0zUndNcLS1FwT6OIRYj').collection('health-monitoring').doc('12-9-2019').update({
-      heart_rate: heart_rate,
-    })
-      .then(function () {
-        console.log("Document successfully written!");
-      })
-      .catch(function (error) {
-        console.error("Error writing document: ", error);
-      });
-  }, 2000)
-  setInterval(() => {
-    steps += Math.ceil(Math.random()*10);
-    meter += Math.ceil(Math.random()*8);
-    calories += Math.ceil(Math.random()*15);
-    fat_burn += Math.ceil(Math.random());
-    db.collection('users').doc('A0zUndNcLS1FwT6OIRYj').collection('health-monitoring').doc('12-9-2019').update({
-      steps,
-      fat_burn,
-      calories,
-      meter
-    })
-      .then(function () {
-        console.log("Document successfully written!");
-      })
-      .catch(function (error) {
-        console.error("Error writing document: ", error);
-      });
-  }, 3000)
-
-  res.send("real time started")
-})
-*/
 app.get('/live', (req, res) => {
 
   try {
@@ -316,6 +253,7 @@ app.get('/api/data/steps', (req, res) => {
 
 app.get('/api/data/getFiles', (req, res) => {
   const { day, month, year, type } = req.query;
+  
   fs.readdir(__dirname + `/Databases/${type}/${year}_${month}_${day}`, function (err, filenames) {
     if (err) {
       console.log(err);
