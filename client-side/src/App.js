@@ -18,14 +18,14 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <ul>
-            <li>
+          <ul className="d-flex flex-row nav-bar">
+            <li className="p-3">
               <Link to="/">Home</Link>
             </li>
-            <li>
-              <Link to="/control-panel">Control Panel</Link>
+            <li className="p-3">
+              <Link to="/data">Data</Link>
             </li>
-            <li>
+            <li className="p-3">
               <Link to="/heart">Heart</Link>
             </li>
           </ul>
@@ -40,11 +40,8 @@ class App extends Component {
           of them to render at a time
         */}
           <Switch>
-            <Route exact path="/control-panel">
-              <ControlPanel />
-            </Route>
             <Route exact path="/">
-              <Homepage />
+              <Heart />
             </Route>
             <Route exact path="/heart">
               <Heart />
@@ -59,29 +56,6 @@ class App extends Component {
   }
 }
 
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
-}
-
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  );
-}
-
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
-    </div>
-  );
-}
 
 
 
