@@ -20,8 +20,7 @@ var defaults = {
 //get Time
 // let current_datetime = new Date();
 // let current_minutes = current_datetime.getMinutes().toString();
-
-
+var age = 69;
 const port = 8080;
 var app = express();
 var server = app.listen(port, function () {
@@ -113,13 +112,36 @@ io.on("connection", function (socket) {
         })
       });
     }
-
-
-
+    if(age>18 && age<36){
+      if(Math.abs(data.heart - 72) >=15 ){
+        data.alertLED =1;
+      }else if(Math.abs(data.heart - 72) >=20){
+        data.alertLED = 2;
+      }else{
+        data.alertLED = 0;
+      }
+    }else if(age>35 && age<56){
+      if(Math.abs(data.heart - 74) >=15 ){
+        data.alertLED =1;
+      }else if(Math.abs(data.heart - 74) >=20){
+        data.alertLED = 2;
+      }else{
+        data.alertLED = 0;
+      }
+    }
+    else if(age>55 && age<100){
+      if(Math.abs(data.heart - 69) >=15 ){
+        data.alertLED =1;
+      }else if(Math.abs(data.heart - 69) >=20){
+        data.alertLED = 2;
+      }else{
+        data.alertLED = 0;
+      }
+    }
     // Update data
     docRef.update(data);
     // Send to ESP8266
-    io.sockets.emit("heart_rate", data.heart_rate);
+    io.sockets.emit("heart_rate", data);
   })
 
   // Listen steps - calories - fatburn - meter from Python Application
@@ -187,8 +209,9 @@ app.get('/live', (req, res) => {
     const example = spawn('python3', ['example.py', `-m ${mac}`, '-l'], defaults);
     console.log("running...");
     example.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-      console.log(typeof (data));
+      // console.log(`stdout: ${data}`);
+      returnData = 
+      console.log(data);
     });
 
     example.stderr.on('data', (data) => {
