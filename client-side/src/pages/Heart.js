@@ -90,7 +90,7 @@ export class Heart extends Component {
   }
 
   render() {
-    const { mac, heart, calories, steps, meters, fat_burn, message } = this.state;
+    const { mac, heart, calories, steps, meters, message } = this.state;
     return (
       <div>
         <Row>
@@ -115,53 +115,52 @@ export class Heart extends Component {
         {heart === 0 && "Loading..."}
         {/*this.state.heart !== 0 && <Chart data={updateChart(this.state.heart)} name="Grandmother" displayTitle="true" />*/}
         {heart !== 0 &&
-          <div class="grid-container">
-            <div class="heart-rate-chart">
-              <Chart data={updateChart(heart)} name="Grandmother" displayTitle={false} />
-            </div>
-            <div class="calories">
-              <div className="item-icon">
-                <i class="fab fa-gripfire"></i>
-              </div>
-              <div className="item-group" >
-                <div className="item-value">{calories}</div>
-                <div className="item-label">calories</div>
-              </div>
-            </div>
-            <div class="steps">
-              <div className="item-icon">
-                <i class="fas fa-walking"></i>
-              </div>
-              <div className="item-group">
-                <div className="item-value">{steps}</div>
-                <div className="item-label">steps</div>
-              </div>
-            </div>
-            <div class="fat-burning">
-              <div className="item-icon">
-                <i class="fas fa-walking"></i>
-              </div>
-              <div className="item-group">
-                <div className="item-value">{fat_burn}g</div>
-                <div className="item-label">Fat Burning</div>
-              </div>
-            </div>
-            <div class="meter">
-              <div className="item-icon">
-                <i class="fas fa-route"></i>
-              </div>
-              <div className="item-group">
-                <div className="item-value">{meters}</div>
-                <div className="item-label">meter</div>
-              </div>
-            </div>
-            <div class="excercise">
-              <div className="item-label">Excercise</div>
-              <div className="item-value">No</div>
-            </div>
+          <div >
+            <Row>
+              <Col className="grid-container">
+                <Chart data={updateChart(heart)} name="Grandmother" displayTitle={false} />
+              </Col>
+            </Row>
+            <Row>
+              <Col className="calories">
+                <div className="item-icon">
+                  <i class="fab fa-gripfire"></i>
+                </div>
+                <div className="item-group" >
+                  <div className="item-value">{calories}</div>
+                  <div className="item-label">calories</div>
+                </div>
+              </Col>
+              <Col className="calories">
+                <div className="item-icon">
+                  <i class="fas fa-walking"></i>
+                </div>
+                <div className="item-group">
+                  <div className="item-value">{steps}</div>
+                  <div className="item-label">steps</div>
+                </div>
+              </Col>
+              <Col className="calories">
+                <div className="item-icon">
+                  <i class="fas fa-route"></i>
+                </div>
+                <div className="item-group">
+                  <div className="item-value">{meters}</div>
+                  <div className="item-label">meter</div>
+                </div>
+              </Col>
+              <Col className="calories">
+                <div className="item-icon">
+                  <i class="fas fa-battery-three-quarters"></i>
+                </div>
+                <div className="item-group">
+                  <div className="item-value">58%</div>
+                  <div className="item-label">Battery</div>
+                </div>
+              </Col>
+            </Row>
           </div>
         }
-        {/* </Row> */}
       </div>
     );
   }

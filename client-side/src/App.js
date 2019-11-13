@@ -25,9 +25,6 @@ class App extends Component {
             <li className="p-3">
               <Link to="/data">Data</Link>
             </li>
-            <li className="p-3">
-              <Link to="/heart">Heart</Link>
-            </li>
           </ul>
 
           <hr />
